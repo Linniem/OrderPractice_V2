@@ -10,5 +10,6 @@ namespace OrderPractice_V2.Services
     public interface IOrderService
     {
         public Task<IEnumerable<OrderVm>> GetAllOrderVmAsync();
+        public Task<OrderVm> UpdateEntityAsync(OrderVm orderVm);
     }
 }

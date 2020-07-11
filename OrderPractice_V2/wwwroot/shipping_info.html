@@ -42,14 +42,21 @@
                 <button v-cloak v-if="userName == null" onclick="location.href='./login.html'" class="btn btn-outline-success my-2 my-sm-0 ">
                     Login
                 </button>
-                <button v-else id="logOutBt" class="btn btn-outline-success my-2 my-sm-0 ">
+                <button v-cloak v-else id="logOutBt" class="btn btn-outline-success my-2 my-sm-0 ">
                     LogOut
                 </button>
             </ul>
         </div>
     </nav>
 
-    <h1>this is shipping info page.</h1>
+    <div class="container">
+        <div class="row">
+            <h1>
+                <br>
+                Shipping info page
+            </h1>
+        </div>
+    </div>
 
 
     <!-- Optional JavaScript -->

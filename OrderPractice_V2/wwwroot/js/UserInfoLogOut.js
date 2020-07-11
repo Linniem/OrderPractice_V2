@@ -1,23 +1,33 @@
-VueBindUserInfo();
+var USER_NAME = localStorage.getItem('userName');
+var TOKEN = localStorage.getItem('token');
+$.ajaxSetup({
+    headers: { 'Authorization': `Bearer ${TOKEN}` }
+});
+
 
 $(document).ready(function () {
+    VueBindUserInfo();
     $('#logOutBt').click(LogOut);
-
-    function LogOut() {
-        localStorage.removeItem('token');
-        localStorage.removeItem('userName');
-        alert('Logged out');
-        location.href = './';
-    }
 })
 
 function VueBindUserInfo() {
-    var VueUserInfo = new Vue(
+    new Vue(
         {
             el: '#navBarBlock',
             data: {
-                userName: localStorage.getItem('userName')
+                userName: USER_NAME
             }
         }
     )
+}
+
+function LogOut() {
+    CleanLocalStorage();
+    alert('Logged out');
+    location.href = './';
+}
+
+function CleanLocalStorage() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('userName');
 }

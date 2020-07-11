@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using OrderPractice_V2.Data;
 using OrderPractice_V2.Models;
 using OrderPractice_V2.Services;
+using OrderPractice_V2.ViewModels;
 
 namespace OrderPractice_V2.Controllers
 {
@@ -19,7 +20,7 @@ namespace OrderPractice_V2.Controllers
     {
         private readonly IOrderService orderService;
 
-        public OrdersController(OrderPracticeContext context,IOrderService orderService)
+        public OrdersController(OrderPracticeContext context, IOrderService orderService)
         {
             this.orderService = orderService;
         }
@@ -29,6 +30,12 @@ namespace OrderPractice_V2.Controllers
         public async Task<ActionResult<IEnumerable<Order>>> GetOrder()
         {
             return Ok(await orderService.GetAllOrderVmAsync());
+        }
+
+        [HttpPut("{orderId}")]
+        public async Task<IActionResult> PutOrder(string orderId, OrderVm orderVm)
+        {
+            return Ok(await orderService.UpdateEntityAsync(orderVm));
         }
     }
 }
