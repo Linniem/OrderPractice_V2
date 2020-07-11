@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OrderPractice_V2.Helpers;
 using OrderPractice_V2.ViewModels;
+using OrderPractice_V2.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace OrderPractice_V2.Controllers
 {
@@ -15,9 +17,12 @@ namespace OrderPractice_V2.Controllers
     public class JwtController : ControllerBase
     {
         private readonly JwtHelper jwt;
-        public JwtController(JwtHelper jwt)
+        private readonly OrderPracticeContext db;
+
+        public JwtController(JwtHelper jwt, OrderPracticeContext db)
         {
             this.jwt = jwt;
+            this.db = db;
         }
 
         [AllowAnonymous]
@@ -35,9 +40,9 @@ namespace OrderPractice_V2.Controllers
 
         [AllowAnonymous]
         [HttpPost("signin")]
-        public ActionResult<string> SignIn([FromForm]LoginViewModel login)
+        public async Task<ActionResult<string>> SignIn([FromForm]LoginViewModel login)
         {
-            if (ValidateUser(login))
+            if ( await ValidateUserAsync(login))
             {
                 return jwt.GenerateToken(login.Username);
             }
@@ -47,10 +52,17 @@ namespace OrderPractice_V2.Controllers
             }
         }
 
-        private bool ValidateUser(LoginViewModel login)
+        private async Task<bool> ValidateUserAsync(LoginViewModel login)
         {
-            // TODO
-            return true;
+            var a = await db.Users.FirstOrDefaultAsync(
+                x => x.UserName == login.Username 
+                && x.Password == login.Password
+                );
+            if (a != null)
+            {
+                return true;
+            }
+            return false;
         }
 
         [Authorize]

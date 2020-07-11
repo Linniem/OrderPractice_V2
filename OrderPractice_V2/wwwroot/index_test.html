@@ -10,8 +10,9 @@
 </head>
 <body>
     <button onclick="sendLogin()">Login</button>
-    <button onclick="GetTest('')">GetTest</button>
-    <button onclick="GetTest('2')">GetTest2</button>
+    <button onclick="GetTest('')">GetAnymus</button>
+    <button onclick="GetTest('2')">GetAuthuca</button>
+    <button onclick="GetAllOrders()">GetAllOrders</button>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -28,8 +29,8 @@
     <script>
         var TOKEN = '';
         postData = {
-            'UserName': '123',
-            'PassWord': '456'
+            'UserName': 'User A',
+            'PassWord': '123456'
         }
         function sendLogin() {
             $.ajax({
@@ -50,6 +51,17 @@
                 headers: { 'Authorization': `Bearer ${TOKEN}` },
                 success: function (response) {
                     alert(response);
+                }
+            });
+        }
+        function GetAllOrders() {
+            $.ajax({
+                type: 'GET',
+                url: '/api/Orders/',
+                headers: { 'Authorization': `Bearer ${TOKEN}` },
+                dataType: 'json',
+                success: function (response) {
+                    console.log(response);
                 }
             });
         }
