@@ -11,13 +11,17 @@
         #login-block {
             padding: 20px;
         }
+
+        [v-cloak] {
+            display: none;
+        }
     </style>
 
     <title>Login</title>
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" id="navBarBlock">
         <a class="navbar-brand" href="./">OMS</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -35,10 +39,18 @@
                 <li class="nav-item">
                     <a class="nav-link" href="./shipping_info.html">Shipping Info</a>
                 </li>
+                <li class="nav-item" v-cloak v-if="userName != null">
+                    <a class="nav-link disabled text-dark " href="#">Hi, {{ userName }}</a>
+                </li>
             </ul>
             <ul class="my-2 my-lg-0">
-                <button onclick="location.href='./login.html'"
-                    class="btn btn-outline-success my-2 my-sm-0">Login</button>
+                <button v-cloak v-if="userName == null" onclick="location.href='./login.html'"
+                    class="btn btn-outline-success my-2 my-sm-0 ">
+                    Login
+                </button>
+                <button v-else id="logOutBt" class="btn btn-outline-success my-2 my-sm-0 ">
+                    LogOut
+                </button>
             </ul>
         </div>
     </nav>
@@ -52,12 +64,12 @@
                 </h1>
                 <br>
                 <div class="input-group mb-3">
-                    <input type="text" class="form-control" placeholder="Username">
+                    <input id="userNameInput" type="text" class="form-control" placeholder="Username">
                 </div>
                 <div class="input-group mb-3">
-                    <input type="password" class="form-control" placeholder="Password">
+                    <input id="passwordInput" type="password" class="form-control" placeholder="Password">
                 </div>
-                <button class="btn btn-primary">Login</button>
+                <button id="logInBt" class="btn btn-primary">Login</button>
             </div>
         </div>
     </div>
@@ -73,6 +85,55 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.11/vue.min.js"></script>
+    <script src="js/UserInfoLogOut.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            AddUserPressEnterEvent();
+
+            $('#logInBt').click(AjaxValidateUser);
+        });
+
+        function AddUserPressEnterEvent() {
+            document.getElementById('passwordInput').addEventListener("keyup", function (event) {
+                if (event.keyCode === 13) {
+                    event.preventDefault();
+                    AjaxValidateUser();
+                }
+            })
+        }
+
+        function AjaxValidateUser() {
+            let userName = $('#userNameInput').val();
+            let passWord = $('#passwordInput').val();
+
+            $.ajax({
+                type: 'POST',
+                url: '/api/Jwt/signin',
+                data: {
+                    'UserName': userName,
+                    'PassWord': passWord
+                },
+                dataType: 'text',
+                success: function (response) {
+                    localStorage.setItem('token', response);
+                    localStorage.setItem('userName', userName);
+                    alert(`Welcom back, ${userName}.`);
+                    location.href = './';
+                },
+                error: function (response) {
+                    if (response.status == 400) {
+                        alert('Incorrect Username or Password.');
+                    } else {
+                        alert(`Failed. Http code : ${response.status}`);
+                    }
+
+                }
+            });
+        }
+
+    </script>
 
 </body>
 

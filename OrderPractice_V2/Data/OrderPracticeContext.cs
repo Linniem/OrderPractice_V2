@@ -34,7 +34,7 @@ namespace OrderPractice_V2.Data
                 new Product { ProductId = 4, ProductName = "Product4", UnitPrice = 150 }
                 );
             modelBuilder.Entity<User>().HasData(
-                new User { UserId = 1, UserName = "User A", Password = "123456" }
+                new User { UserId = 1, UserName = "UserA", Password = "123456" }
                 );
             modelBuilder.Entity<Order>().HasData(
                 new Order { OrderId = "A20202026001", UserId = 1, TotalPrice = 100, TotalCost = 90, OrderStatus = "Payment completed" },

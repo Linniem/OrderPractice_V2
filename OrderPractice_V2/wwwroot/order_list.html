@@ -8,13 +8,18 @@
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
     <title>Order List</title>
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+    </style>
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" id="navBarBlock">
         <a class="navbar-brand" href="./">OMS</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
@@ -23,17 +28,22 @@
                 <li class="nav-item">
                     <a class="nav-link" href="./">Home</a>
                 </li>
-                <li class="nav-item active">
-                    <a class="nav-link" href="./order_list.html">Order List</a>
+                <li class="nav-item">
+                    <a class="nav-link active" href="./order_list.html">Order List</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="./shipping_info.html">Shipping Info</a>
                 </li>
+                <li class="nav-item" v-cloak v-if="userName != null">
+                    <a class="nav-link disabled text-dark" href="#">Hi, {{ userName }}</a>
+                </li>
             </ul>
             <ul class="my-2 my-lg-0">
-                <button onclick="location.href='./login.html'"
-                        class="btn btn-outline-success my-2 my-sm-0">
+                <button v-cloak v-if="userName == null" onclick="location.href='./login.html'" class="btn btn-outline-success my-2 my-sm-0 ">
                     Login
+                </button>
+                <button v-else id="logOutBt" class="btn btn-outline-success my-2 my-sm-0 ">
+                    LogOut
                 </button>
             </ul>
         </div>
@@ -53,7 +63,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr v-for="item in items">
+            <tr v-cloak v-for="item in items">
                 <td>
                     <input type="checkbox" :value="item.orderId" :id="item.orderId">
                 </td>
@@ -113,27 +123,13 @@
             integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
             crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.11/vue.min.js"></script>
+    <script src="js/UserInfoLogOut.js"></script>
 
     <script>
         var VUE_MODEL;
         var BOOTSTRAP_VUE_MODEL;
         var ORDERS_JSON;
         var PRODUCT_JSON = { 'productId': '0', 'productName': 'productName' };
-
-        $(document).ready(function () {
-            $.ajax({
-                type: 'GET',
-                url: '/api/Orders',
-                dataType: 'json',
-                success: function (response) {
-                    ORDERS_JSON = response;
-
-                    BindVueModel();
-                    AddConfirmBtEvent();
-                }
-            });
-
-        });
 
         function BindVueModel() {
             VUE_MODEL = new Vue(
