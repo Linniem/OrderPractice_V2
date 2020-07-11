@@ -65,6 +65,7 @@ namespace OrderPractice_V2
                     options.UseSqlServer(Configuration.GetConnectionString("OrderPracticeContext")));
 
             services.AddTransient<IOrderRepository, OrderRepository>();
+            services.AddTransient<IShipInfoRepository, ShipInfoRepository>();
 
             services.AddTransient<IOrderService, OrderService>();
 

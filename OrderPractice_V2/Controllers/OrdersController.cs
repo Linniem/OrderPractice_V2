@@ -35,7 +35,7 @@ namespace OrderPractice_V2.Controllers
         [HttpPut("{orderId}")]
         public async Task<IActionResult> PutOrder(string orderId, OrderVm orderVm)
         {
-            return Ok(await orderService.UpdateEntityAsync(orderVm));
+            return Ok(await orderService.AddShipInfoAsync(orderVm));
         }
     }
 }
