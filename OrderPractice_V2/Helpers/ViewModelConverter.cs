@@ -42,7 +42,7 @@ namespace OrderPractice_V2.Helpers
             return new ShipInfoVm()
             {
                 OrderId = shipInfo.OrderId,
-                CreatedDateTime = shipInfo.CreatedDateTime,
+                CreatedDateTime = shipInfo.CreatedDateTime.ToString("yyyy/dd/MM HH:mm:ss"),
                 ShipInfoId = shipInfo.ShipInfoId,
                 ShipStatus = shipInfo.ShipStatus
             };

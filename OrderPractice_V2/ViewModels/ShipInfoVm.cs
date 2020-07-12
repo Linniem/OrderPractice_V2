@@ -10,6 +10,6 @@ namespace OrderPractice_V2.ViewModels
         public string ShipInfoId { get; set; }
         public string OrderId { get; set; }
         public string ShipStatus { get; set; }
-        public DateTime CreatedDateTime { get; set; }
+        public string CreatedDateTime { get; set; }
     }
 }

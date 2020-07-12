@@ -17,7 +17,7 @@ namespace OrderPractice_V2.Data
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderDetail> OrderDetails { get; set; }
         public DbSet<Product> Products { get; set; }
-        public DbSet<ShipInfo> ShipInfos { get; set; }
+        public DbSet<ShipInfo> ShipInfoes { get; set; }
         public DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

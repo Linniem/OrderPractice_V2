@@ -17,12 +17,12 @@ namespace OrderPractice_V2.Repositories
 
         public IQueryable<ShipInfo> GetAll()
         {
-            return dbContext.ShipInfos;
+            return dbContext.ShipInfoes;
         }
 
         public async Task CreateAynsc(ShipInfo entity)
         {
-            await dbContext.ShipInfos.AddAsync(entity);
+            await dbContext.ShipInfoes.AddAsync(entity);
             await dbContext.SaveChangesAsync();
         }
     }
