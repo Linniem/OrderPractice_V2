@@ -74,7 +74,6 @@ namespace OrderPractice_V2
             services.AddTransient<IUserService, UserService>();
             //services.AddTransient<IOrderDetailService, OrderDetailService>();
 
-            services.AddTransient<IViewModelConverter, ViewModelConverter>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

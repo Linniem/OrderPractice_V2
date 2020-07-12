@@ -7,38 +7,30 @@ using System.Threading.Tasks;
 
 namespace OrderPractice_V2.Helpers
 {
-    public class ViewModelConverter : IViewModelConverter
+    public static class ModelConvertExtensions
     {
-        
-        public IEnumerable<U> ConvertAllGeneric<T, U>(IEnumerable<T> modelList, Func<T, U> predicate)
-        {
-            foreach (var model in modelList)
-            {
-                yield return predicate.Invoke(model);
-            }
-        }
-
-        public OrderVm OrderConvertOne(Order order)
-        {
-            return new OrderVm()
+        public static IEnumerable<OrderVm> ConvertAllToViewModel(this List<Order> OrderList)
+            => from order in OrderList
+               select order.ConverterToViewModel();
+        public static OrderVm ConverterToViewModel(this Order order)
+            => new OrderVm()
             {
                 OrderId = order.OrderId,
                 TotalPrice = order.TotalPrice,
                 TotalCost = order.TotalCost,
                 Status = order.OrderStatus,
             };
-        }
 
-        public ShipInfoVm ShipInfoConvertOne(ShipInfo shipInfo)
-        {
-            return new ShipInfoVm()
+        public static IEnumerable<ShipInfoVm> ConvertAllToViewModel(this List<ShipInfo> ShipInfoList)
+            => from shipInfo in ShipInfoList
+               select shipInfo.ConverterToViewModel();
+        public static ShipInfoVm ConverterToViewModel(this ShipInfo shipInfo)
+            => new ShipInfoVm()
             {
-                OrderId = shipInfo.OrderId,
                 CreatedDateTime = shipInfo.CreatedDateTime.ToString("yyyy/dd/MM HH:mm:ss"),
                 ShipInfoId = shipInfo.ShipInfoId,
                 ShipStatus = shipInfo.ShipStatus
             };
-        }
 
     }
 }

@@ -13,19 +13,16 @@ namespace OrderPractice_V2.Services
     public class ShipInfoService : IShipInfoService
     {
         private readonly IShipInfoRepository repo;
-        private readonly IViewModelConverter modelConverter;
 
-        public ShipInfoService(IShipInfoRepository shipInfoRepo,IViewModelConverter modelConverter)
+        public ShipInfoService(IShipInfoRepository shipInfoRepo)
         {
             this.repo = shipInfoRepo;
-            this.modelConverter = modelConverter;
         }
 
         public async Task<IEnumerable<ShipInfoVm>> GetAllShipInfoAsync()
         {
-            var shipInfoList = await repo.GetAll().ToListAsync();
-            return modelConverter.ConvertAllGeneric(shipInfoList,
-                (ShipInfo x) => modelConverter.ShipInfoConvertOne(x));
+            var ShipInfoList = await repo.GetAll().ToListAsync();
+            return ShipInfoList.ConvertAllToViewModel();
         }
     }
 }

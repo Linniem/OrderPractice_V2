@@ -13,22 +13,18 @@ namespace OrderPractice_V2.Services
     public class OrderService : IOrderService
     {
         private readonly IOrderRepository orderRepo;
-        private readonly IViewModelConverter vmConverter;
         private readonly IShipInfoRepository shipInfoRepo;
         public OrderService(IOrderRepository orderRepo,
-            IViewModelConverter vmConverter,
             IShipInfoRepository shipInfoRepo)
         {
             this.orderRepo = orderRepo;
-            this.vmConverter = vmConverter;
             this.shipInfoRepo = shipInfoRepo;
         }
 
         public async Task<IEnumerable<OrderVm>> GetAllOrderVmAsync()
         {
-            var allOrders = await orderRepo.GetAll().ToListAsync();
-            return vmConverter.ConvertAllGeneric(allOrders, 
-                (Order x) => vmConverter.OrderConvertOne(x));
+            var orderList = await orderRepo.GetAll().ToListAsync();
+            return orderList.ConvertAllToViewModel();
         }
 
         public async Task<OrderVm> AddShipInfoAsync(OrderVm orderVm)
@@ -46,7 +42,7 @@ namespace OrderPractice_V2.Services
 
             await orderRepo.UpdateAsync(orderEntity);
             await shipInfoRepo.CreateAynsc(newShipInfoEntity);
-            return vmConverter.OrderConvertOne(orderEntity);
+            return orderEntity.ConverterToViewModel();
         }
     }
 }
