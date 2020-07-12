@@ -32,5 +32,18 @@ namespace OrderPractice_V2.Helpers
                 ShipStatus = shipInfo.ShipStatus
             };
 
+        public static IEnumerable<OrderDetailVm> ConvertAllToViewModel(this List<OrderDetail> OrderDetailList)
+            => from shipInfo in OrderDetailList
+               select shipInfo.ConverterToViewModel();
+        public static OrderDetailVm ConverterToViewModel(this OrderDetail orderDetail)
+            => new OrderDetailVm()
+            {
+                OrderId = orderDetail.OrderId ,
+                UnitPrice = orderDetail.UnitPrice ,
+                UnitCost = orderDetail.UnitCost ,
+                Quantity = orderDetail.Quantity,
+                ProductName = orderDetail.Product.ProductName
+            };
+
     }
 }

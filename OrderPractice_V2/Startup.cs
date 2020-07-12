@@ -72,7 +72,7 @@ namespace OrderPractice_V2
             services.AddTransient<IOrderService, OrderService>();
             services.AddTransient<IShipInfoService, ShipInfoService>();
             services.AddTransient<IUserService, UserService>();
-            //services.AddTransient<IOrderDetailService, OrderDetailService>();
+            services.AddTransient<IOrderDetailService, OrderDetailService>();
 
         }
 

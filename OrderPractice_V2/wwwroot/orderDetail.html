@@ -7,23 +7,10 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
-    <title>Order List</title>
+    <title>Order Detail</title>
     <style>
         [v-cloak] {
             display: none;
-        }
-
-        input[type=checkbox] {
-            width: 50px;
-            height: 50px;
-        }
-
-        .orderLink:hover {
-            cursor: pointer;
-        }
-
-        .orderLink {
-            color: rgb(0, 147, 196);
         }
     </style>
 </head>
@@ -42,10 +29,10 @@
                     <a class="nav-link" href="./">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="./order_list.html">Order List</a>
+                    <a class="nav-link" href="./order_list.html">Order List</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="./shipping_info.html">Shipping Info</a>
+                    <a class="nav-link active" href="./shipping_info.html">Shipping Info</a>
                 </li>
                 <li class="nav-item" v-cloak v-if="userName != null">
                     <a class="nav-link disabled text-dark" href="#">Hi, {{ userName }}</a>
@@ -67,47 +54,52 @@
         <div class="row">
             <h1>
                 <br>
-                Order list page
+                Order Detail
             </h1>
+            
         </div>
+        
     </div>
 
+    
+    <button onclick="location.href='./order_list.html'" class="btn btn-primary ">
+        Back To Order List
+    </button>
+    <br>
+    <br>
 
-    <table id="ordersTable" class="table table-hover table-bordered">
+    <table id="shipInfoTable" class="table table-hover table-bordered">
         <thead class="thead-dark">
             <tr>
-                <th></th>
-                <th>Order Id</th>
-                <th>Total Price</th>
-                <th>Total Cost</th>
-                <th>Order Status</th>
+                <th>OrderID</th>
+                <th>Product Name</th>
+                <th>Quantity</th>
+                <th>Unit Price</th>
+                <th>Unit Cost</th>
             </tr>
         </thead>
         <tbody>
             <tr v-cloak v-for="item in items">
                 <td>
-                    <input type="checkbox" :value="item.orderId" :id="item.orderId"
-                        :disabled="item.status=='To be shipped'">
-                </td>
-                <td v-on:click="SetOrderClickToDetail(item.orderId)" class="orderLink">
                     {{item.orderId}}
                 </td>
                 <td>
-                    {{item.totalPrice}}
+                    {{item.productName}}
                 </td>
                 <td>
-                    {{item.totalCost}}
+                    {{item.quantity}}
                 </td>
                 <td>
-                    {{item.status}}
+                    {{item.unitPrice}}
+                </td>
+                <td>
+                    {{item.unitCost}}
                 </td>
             </tr>
         </tbody>
     </table>
 
-    <div class="justify-content-center d-flex">
-        <div id="cofirmButton" type="button" class="btn btn-primary">Confirm</div>
-    </div>
+    
 
 
     <!-- Optional JavaScript -->
@@ -122,20 +114,19 @@
         crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.11/vue.min.js"></script>
     <script src="js/UserInfoLogOut.js"></script>
-
     <script>
         var VUE_MODEL;
-        var ORDERS_JSON;
+        var SHIPINFOES_JSON;
+        var cOrderId = getCookie('orderId');
 
         $(document).ready(function () {
             $.ajax({
                 type: 'GET',
-                url: '/api/Orders',
+                url: `api/OrderDetails/${cOrderId}`,
                 dataType: 'json',
                 success: function (response) {
-                    ORDERS_JSON = response;
+                    SHIPINFOES_JSON = response;
                     BindVueModel();
-                    AddConfirmBtEvent();
                 },
                 error: function (response) {
                     if (response.status == 401) {
@@ -146,75 +137,15 @@
                     }
                 }
             });
-
         });
 
         function BindVueModel() {
             VUE_MODEL = new Vue(
                 {
-                    el: '#ordersTable',
-                    data: { items: ORDERS_JSON },
-                    methods: {
-                        GetProductInfo: SetOrderClickToDetail
-                    }
+                    el: '#shipInfoTable',
+                    data: { items: SHIPINFOES_JSON },
                 }
             )
-        }
-
-        function SetOrderClickToDetail(orderId) {
-            document.cookie = `orderId=${orderId}`;
-            setCookie('orderId',orderId,1);
-            location.href = './orderDetail.html';
-        }
-
-        function AddConfirmBtEvent() {
-            $('#cofirmButton').click(() => {
-                let patchQueue = GetCheckedDatas();
-                SendAjaxRecursion(patchQueue);
-            })
-        }
-
-        function SendAjaxRecursion(patchQueue) {
-            let patchOrderId = patchQueue.shift();
-            let vueItem = VUE_MODEL.$data.items.find(ele => ele.orderId == patchOrderId);
-
-            // Payment completed
-            // To be shipped
-            let newStatusString = 'Payment completed';
-            if (vueItem.status == 'Payment completed') {
-                newStatusString = 'To be shipped';
-            }
-            let putJsonData =
-            {
-                'OrderId': patchOrderId,
-                'Status': newStatusString
-            }
-
-
-            $.ajax({
-                type: 'PUT',
-                url: `/api/Orders/${patchOrderId}`,
-                data: JSON.stringify(putJsonData),
-                contentType: 'application/json',
-                success: function (response) {
-                    vueItem.status = response.status;
-                    document.querySelector(`#${patchOrderId}`).checked = false;
-
-                    if (patchQueue.length > 0) {
-                        SendAjaxRecursion(patchQueue);
-                    }
-                }
-            });
-        }
-
-        function GetCheckedDatas() {
-            let patchQueue = [];
-            [...$('input')].forEach(checkBox => {
-                if (checkBox.checked) {
-                    patchQueue.push(checkBox.value);
-                }
-            });
-            return patchQueue;
         }
 
         function setCookie(cname, cvalue, exdays) {
@@ -232,6 +163,7 @@
             }
             return "";
         }
+
     </script>
 </body>
 

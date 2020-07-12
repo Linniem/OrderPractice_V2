@@ -1,4 +1,8 @@
-﻿using OrderPractice_V2.Repositories;
+﻿using Microsoft.EntityFrameworkCore;
+using OrderPractice_V2.Helpers;
+using OrderPractice_V2.Models;
+using OrderPractice_V2.Repositories;
+using OrderPractice_V2.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,16 +12,19 @@ namespace OrderPractice_V2.Services
 {
     public class OrderDetailService : IOrderDetailService
     {
-        private readonly OrderDetailRepository odRepo;
-        public OrderDetailService(OrderDetailRepository odRepo)
+        private readonly IOrderDetailRepository repo;
+        public OrderDetailService(IOrderDetailRepository repo)
         {
-            this.odRepo = odRepo;
+            this.repo = repo;
         }
 
-        public void Test()
+        public async Task<IEnumerable<OrderDetailVm>> GetManyByOrderIdAsync(string orderId)
         {
-            var a = 1;
-            a += 1;
+            var a = (await repo.GetAll()
+                .Include("Product")
+                .Where(x => x.OrderId == orderId)
+                .ToListAsync()).ConvertAllToViewModel();
+            return a;
         }
     }
 }
