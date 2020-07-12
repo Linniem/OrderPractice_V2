@@ -67,9 +67,11 @@ namespace OrderPractice_V2
             services.AddTransient<IOrderRepository, OrderRepository>();
             services.AddTransient<IShipInfoRepository, ShipInfoRepository>();
             services.AddTransient<IOrderDetailRepository, OrderDetailRepository>();
+            services.AddTransient<IUserRepository, UserRepository>();
 
             services.AddTransient<IOrderService, OrderService>();
             services.AddTransient<IShipInfoService, ShipInfoService>();
+            services.AddTransient<IUserService, UserService>();
             //services.AddTransient<IOrderDetailService, OrderDetailService>();
 
             services.AddTransient<IViewModelConverter, ViewModelConverter>();

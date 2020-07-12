@@ -5,9 +5,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using OrderPractice_V2.Helpers;
-using OrderPractice_V2.ViewModels;
 using OrderPractice_V2.Data;
+using OrderPractice_V2.Helpers;
+using OrderPractice_V2.Services;
+using OrderPractice_V2.ViewModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace OrderPractice_V2.Controllers
@@ -17,32 +18,19 @@ namespace OrderPractice_V2.Controllers
     public class JwtController : ControllerBase
     {
         private readonly JwtHelper jwt;
-        private readonly OrderPracticeContext db;
+        private readonly IUserService userService;
 
-        public JwtController(JwtHelper jwt, OrderPracticeContext db)
+        public JwtController(JwtHelper jwt, IUserService userService)
         {
             this.jwt = jwt;
-            this.db = db;
-        }
-
-        [AllowAnonymous]
-        [HttpGet("Test")]
-        public IActionResult Test()
-        {
-            return Ok(1);
-        }
-        [Authorize]
-        [HttpGet("Test2")]
-        public IActionResult Test2()
-        {
-            return Ok(2);
+            this.userService = userService;
         }
 
         [AllowAnonymous]
         [HttpPost("signin")]
         public async Task<ActionResult<string>> SignIn([FromForm]LoginViewModel login)
         {
-            if ( await ValidateUserAsync(login))
+            if ( await userService.ValidateUserAsync(login))
             {
                 return jwt.GenerateToken(login.Username);
             }
@@ -50,19 +38,6 @@ namespace OrderPractice_V2.Controllers
             {
                 return BadRequest();
             }
-        }
-
-        private async Task<bool> ValidateUserAsync(LoginViewModel login)
-        {
-            var a = await db.Users.FirstOrDefaultAsync(
-                x => x.UserName == login.Username 
-                && x.Password == login.Password
-                );
-            if (a != null)
-            {
-                return true;
-            }
-            return false;
         }
 
         [Authorize]
