@@ -15,6 +15,11 @@ namespace OrderPractice_V2.Repositories
             this.dbContext = dbContext;
         }
 
+        public IQueryable<ShipInfo> GetAll()
+        {
+            return dbContext.ShipInfos;
+        }
+
         public async Task CreateAynsc(ShipInfo entity)
         {
             await dbContext.ShipInfos.AddAsync(entity);

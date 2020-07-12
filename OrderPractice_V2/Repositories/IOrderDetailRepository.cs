@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace OrderPractice_V2.Repositories
 {
-    public interface IShipInfoRepository
+    public interface IOrderDetailRepository
     {
-        IQueryable<ShipInfo> GetAll();
-        public Task CreateAynsc(ShipInfo entity);
+        public IQueryable<OrderDetail> GetAll();
     }
 }

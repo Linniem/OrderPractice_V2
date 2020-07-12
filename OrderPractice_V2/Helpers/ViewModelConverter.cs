@@ -9,6 +9,19 @@ namespace OrderPractice_V2.Helpers
 {
     public class ViewModelConverter : IViewModelConverter
     {
+        
+        private IEnumerable<U> ConvertAllGeneric<T, U>(IEnumerable<T> modelList, Func<T, U> predicate)
+        {
+            foreach (var model in modelList)
+            {
+                yield return predicate.Invoke(model);
+            }
+        }
+
+        public IEnumerable<OrderVm> OrderConvertAll(IEnumerable<Order> orderList)
+        {
+            return ConvertAllGeneric(orderList, (Order x) => OrderConvertOne(x));
+        }
         public OrderVm OrderConvertOne(Order order)
         {
             return new OrderVm()
@@ -20,12 +33,20 @@ namespace OrderPractice_V2.Helpers
             };
         }
 
-        public IEnumerable<OrderVm> OrderConvertAll(IEnumerable<Order> orderList)
+        public IEnumerable<ShipInfoVm> ShipInfoConvertAll(IEnumerable<ShipInfo> shipInfoList)
         {
-            foreach (var order in orderList)
-            {
-                yield return OrderConvertOne(order);
-            }
+            return ConvertAllGeneric(shipInfoList, (ShipInfo x) => ShipInfoConvertOne(x));
         }
+        public ShipInfoVm ShipInfoConvertOne(ShipInfo shipInfo)
+        {
+            return new ShipInfoVm()
+            {
+                OrderId = shipInfo.OrderId,
+                CreatedDateTime = shipInfo.CreatedDateTime,
+                ShipInfoId = shipInfo.ShipInfoId,
+                ShipStatus = shipInfo.ShipStatus
+            };
+        }
+
     }
 }
