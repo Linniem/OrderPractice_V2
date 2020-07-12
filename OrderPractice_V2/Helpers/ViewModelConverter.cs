@@ -10,7 +10,7 @@ namespace OrderPractice_V2.Helpers
     public class ViewModelConverter : IViewModelConverter
     {
         
-        private IEnumerable<U> ConvertAllGeneric<T, U>(IEnumerable<T> modelList, Func<T, U> predicate)
+        public IEnumerable<U> ConvertAllGeneric<T, U>(IEnumerable<T> modelList, Func<T, U> predicate)
         {
             foreach (var model in modelList)
             {
@@ -18,10 +18,6 @@ namespace OrderPractice_V2.Helpers
             }
         }
 
-        public IEnumerable<OrderVm> OrderConvertAll(IEnumerable<Order> orderList)
-        {
-            return ConvertAllGeneric(orderList, (Order x) => OrderConvertOne(x));
-        }
         public OrderVm OrderConvertOne(Order order)
         {
             return new OrderVm()
@@ -33,10 +29,6 @@ namespace OrderPractice_V2.Helpers
             };
         }
 
-        public IEnumerable<ShipInfoVm> ShipInfoConvertAll(IEnumerable<ShipInfo> shipInfoList)
-        {
-            return ConvertAllGeneric(shipInfoList, (ShipInfo x) => ShipInfoConvertOne(x));
-        }
         public ShipInfoVm ShipInfoConvertOne(ShipInfo shipInfo)
         {
             return new ShipInfoVm()

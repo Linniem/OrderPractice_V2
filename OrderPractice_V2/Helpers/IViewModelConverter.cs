@@ -9,9 +9,8 @@ namespace OrderPractice_V2.Helpers
 {
     public interface IViewModelConverter
     {
-        public IEnumerable<OrderVm> OrderConvertAll(IEnumerable<Order> orderList);
+        IEnumerable<U> ConvertAllGeneric<T, U>(IEnumerable<T> modelList, Func<T, U> predicate);
         public OrderVm OrderConvertOne(Order order);
-        public IEnumerable<ShipInfoVm> ShipInfoConvertAll(IEnumerable<ShipInfo> shipInfoList);
         public ShipInfoVm ShipInfoConvertOne(ShipInfo shipInfo);
     }
 }

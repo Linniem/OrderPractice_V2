@@ -24,7 +24,8 @@ namespace OrderPractice_V2.Services
         public async Task<IEnumerable<ShipInfoVm>> GetAllShipInfoAsync()
         {
             var shipInfoList = await repo.GetAll().ToListAsync();
-            return modelConverter.ShipInfoConvertAll(shipInfoList);
+            return modelConverter.ConvertAllGeneric(shipInfoList,
+                (ShipInfo x) => modelConverter.ShipInfoConvertOne(x));
         }
     }
 }

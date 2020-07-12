@@ -27,7 +27,8 @@ namespace OrderPractice_V2.Services
         public async Task<IEnumerable<OrderVm>> GetAllOrderVmAsync()
         {
             var allOrders = await orderRepo.GetAll().ToListAsync();
-            return vmConverter.OrderConvertAll(allOrders);
+            return vmConverter.ConvertAllGeneric(allOrders, 
+                (Order x) => vmConverter.OrderConvertOne(x));
         }
 
         public async Task<OrderVm> AddShipInfoAsync(OrderVm orderVm)
