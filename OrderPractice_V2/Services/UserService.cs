@@ -10,15 +10,15 @@ namespace OrderPractice_V2.Services
 {
     public class UserService : IUserService
     {
-        private readonly IUserRepository userRrpo;
-        public UserService(IUserRepository userRrpo)
+        private readonly IUserRepository repo;
+        public UserService(IUserRepository repo)
         {
-            this.userRrpo = userRrpo;
+            this.repo = repo;
         }
 
         public async Task<bool> ValidateUserAsync(LoginViewModel login)
         {
-            var result = await userRrpo.FindAsync
+            var result = await repo.FindAsync
                 (x => x.UserName == login.Username && x.Password == login.Password);
             return (result != null) ? true : false;
         }
