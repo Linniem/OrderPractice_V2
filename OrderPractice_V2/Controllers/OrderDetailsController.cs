@@ -22,7 +22,7 @@ namespace OrderPractice_V2.Controllers
             this.odService = odService;
         }
 
-        // GET: api/OrderDetails/{orderId}
+        // GET: api/OrderDetails/A20202026001
         [HttpGet("{orderId}")]
         public async Task<ActionResult<IEnumerable<OrderDetail>>> GetOrderDetails(string orderId)
         {

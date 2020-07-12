@@ -68,12 +68,14 @@ namespace OrderPractice_V2
             services.AddTransient<IShipInfoRepository, ShipInfoRepository>();
             services.AddTransient<IOrderDetailRepository, OrderDetailRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IProductRepository, ProductRepository>();
 
             services.AddTransient<IOrderService, OrderService>();
             services.AddTransient<IShipInfoService, ShipInfoService>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IOrderDetailService, OrderDetailService>();
-
+            services.AddTransient<IProductService, ProductService>();
+           
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

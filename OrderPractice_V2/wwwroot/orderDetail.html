@@ -12,6 +12,14 @@
         [v-cloak] {
             display: none;
         }
+
+        .productLink {
+            color: rgb(0, 147, 196);
+        }
+
+        .productLink:hover {
+            cursor: pointer;
+        }
     </style>
 </head>
 
@@ -56,12 +64,12 @@
                 <br>
                 Order Detail
             </h1>
-            
+
         </div>
-        
+
     </div>
 
-    
+
     <button onclick="location.href='./order_list.html'" class="btn btn-primary ">
         Back To Order List
     </button>
@@ -73,9 +81,10 @@
             <tr>
                 <th>OrderID</th>
                 <th>Product Name</th>
-                <th>Quantity</th>
                 <th>Unit Price</th>
                 <th>Unit Cost</th>
+                <th>Quantity</th>
+                <th>Total</th>
             </tr>
         </thead>
         <tbody>
@@ -83,11 +92,8 @@
                 <td>
                     {{item.orderId}}
                 </td>
-                <td>
+                <td class="productLink" v-on:click="GetProductInfo(item.productName)">
                     {{item.productName}}
-                </td>
-                <td>
-                    {{item.quantity}}
                 </td>
                 <td>
                     {{item.unitPrice}}
@@ -95,11 +101,38 @@
                 <td>
                     {{item.unitCost}}
                 </td>
+                <td>
+                    {{item.quantity}}
+                </td>
+                <td>
+                    {{item.quantity * item.unitCost}}
+                </td>
             </tr>
         </tbody>
     </table>
 
-    
+    <!-- Modal -->
+    <div class="modal fade" id="BootstrapModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Product Informations</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Product Name : {{product.productName}} <br>
+                    Product ID : {{product.productId}} <br>
+                    Unit Price : {{product.unitPrice}} <br>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
     <!-- Optional JavaScript -->
@@ -117,7 +150,9 @@
     <script>
         var VUE_MODEL;
         var SHIPINFOES_JSON;
+        var BOOTSTRAP_VUE_MODEL;
         var cOrderId = getCookie('orderId');
+        var PRODUCT_JSON = { 'productId': '0', 'productName': 'productName' };
 
         $(document).ready(function () {
             $.ajax({
@@ -144,6 +179,26 @@
                 {
                     el: '#shipInfoTable',
                     data: { items: SHIPINFOES_JSON },
+                    methods: {
+                        GetProductInfo: function (productName) {
+                            $.ajax({
+                                type: 'GET',
+                                url: `/api/Products/${productName}`,
+                                dataType: 'json',
+                                success: function (response) {
+                                    BOOTSTRAP_VUE_MODEL.$data.product = response;
+                                    $('#BootstrapModal').modal('show');
+                                }
+                            });
+                        }
+                    }
+                }
+            )
+
+            BOOTSTRAP_VUE_MODEL = new Vue(
+                {
+                    el: '#BootstrapModal',
+                    data: { product: PRODUCT_JSON }
                 }
             )
         }
