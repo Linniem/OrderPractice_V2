@@ -20,10 +20,10 @@ namespace OrderPractice_V2.Services
 
         public async Task<IEnumerable<OrderDetailVm>> GetManyByOrderIdAsync(string orderId)
         {
-            var OrderDetailVmList = (await repo.GetAll()
+            var OrderDetailVmList = await repo.GetAll()
                 .Include("Product")
                 .Where(x => x.OrderId == orderId)
-                .ToListAsync());
+                .ToListAsync();
             return OrderDetailVmList.ConvertAllToViewModel();
         }
     }
